@@ -1,6 +1,9 @@
 import { Schema, z } from "zod";
 
-const validate = async (req: Request, schema?: Schema): Promise<Response | void> => {
+const runValidations = async (
+  req: Request,
+  schema?: Schema
+): Promise<Response | void> => {
   if (!schema) return;
   try {
     const json = await req.clone().json();
@@ -15,4 +18,4 @@ const validate = async (req: Request, schema?: Schema): Promise<Response | void>
   }
 };
 
-export default validate;
+export default runValidations;

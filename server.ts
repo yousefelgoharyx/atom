@@ -1,8 +1,8 @@
 import { serve } from "http";
-import { sessionData } from "./src/store/session.ts";
 import { HTTPVerb } from "./src/types/Routes.ts";
-import { createRoutesMap, runMiddlewares } from "./src/utils/routes.ts";
-import validate from "./src/validations/validate.ts";
+import { createRoutesMap } from "./src/utils/routes.ts";
+import runValidations from "./src/packages/validations/validate.ts";
+import { runMiddlewares } from "./src/packages/middlewares/middlewares.ts";
 
 export const Atom = {
   bootstrap,
@@ -20,7 +20,6 @@ async function bootstrap(config: BootstrapConfig = {}) {
   async function handler(req: Request): Promise<Response> {
     try {
       if (config?.beforeRequest) await config.beforeRequest(req);
-      sessionData.clear();
       const pathname = new URL(req.url).pathname;
       const verb = req.method.toLowerCase() as HTTPVerb;
       const route = routesMap[pathname];
@@ -28,8 +27,8 @@ async function bootstrap(config: BootstrapConfig = {}) {
         const middlewares = [route.middlewares, route[verb].middlewares];
         const handler = route[verb].default;
         return (
-          (await validate(req, route[verb].schema)) ||
-          (await runMiddlewares(middlewares, req)) ||
+          (await runValidations(req, route[verb].schema)) ||
+          (await runMiddlewares(req, middlewares)) ||
           (await handler(req)) ||
           new Response("Not Founds")
         );

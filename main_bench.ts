@@ -1,9 +1,6 @@
 import { RequestHandler } from "./src/types/Routes.ts";
-import {
-  absolutePath,
-  createRoutesMap,
-  fetchRouteHandlerModule,
-} from "./src/utils/common.ts";
+import { absolutePath, fetchRouteHandlerModule } from "./src/utils/common.ts";
+import { createRoutesMap } from "./src/utils/routes.ts";
 
 Deno.bench(async function GeneratingRoutesMap() {
   await createRoutesMap();
