@@ -1,6 +1,6 @@
-import { z, ZodError } from "zod";
+import { z } from "zod";
 import validate from "./validate.ts";
-import { assertEquals, assertInstanceOf, assertThrows } from "asserts";
+import { assertEquals, assertInstanceOf } from "asserts";
 
 Deno.test("Should validate schema", async (t) => {
   const schema = z.object({
