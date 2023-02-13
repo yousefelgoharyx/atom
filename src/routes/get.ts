@@ -11,6 +11,6 @@ const handler: RequestHandler = (req) => {
   return new Response(`Hello worlds your url is ${req.url} `);
 };
 
-export const middlewares = [ageMiddleware];
+export const middlewares = [];
 
 export default handler;

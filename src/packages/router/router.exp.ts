@@ -1,7 +1,6 @@
 import * as path from "path";
-import { getFileSegmants, isHTTPVerb } from "../../utils/common.ts";
+import { getFileSegmants, isHTTPVerb, isJsFileExt } from "../../utils/common.ts";
 import { parse } from "https://deno.land/x/swc@0.2.1/mod.ts";
-import { ExportDeclaration } from "https://esm.sh/@swc/core@1.2.212/types.d.ts";
 
 async function read(routeSegmants: string[]) {
   const modulePath = path.join(Deno.cwd(), "src", "routes", ...routeSegmants);
@@ -9,8 +8,9 @@ async function read(routeSegmants: string[]) {
     if (dirEntry.isDirectory) {
       await read([...routeSegmants, dirEntry.name]);
     } else {
-      const [fileName] = getFileSegmants(dirEntry.name);
-
+      const fileSegs = getFileSegmants(dirEntry.name);
+      if (!fileSegs || !isJsFileExt(fileSegs[1])) continue;
+      const [fileName] = fileSegs;
       if (isHTTPVerb(fileName) || fileName === "middleware") {
         const file = await Deno.readTextFile(path.join(modulePath, dirEntry.name));
         const ast = parse(file, {
@@ -28,9 +28,6 @@ async function read(routeSegmants: string[]) {
         const defaultExportsExp = ast.body.filter(
           (node) => node.type === "ExportDefaultExpression"
         );
-        const exportsDecl = ast.body.filter(
-          (node) => node.type === "ExportDeclaration"
-        ) as ExportDeclaration[];
 
         if (defaultExportsDecl.length < 1 && defaultExportsExp.length < 1) {
           throw new Error("No default export found");

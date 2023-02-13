@@ -13,10 +13,11 @@ type AsyncOrSyncFn<P, R> = (param: P) => Promise<R> | R;
 interface BootstrapConfig {
   beforeRequest?: AsyncOrSyncFn<Request, void>;
   afterRequest?: AsyncOrSyncFn<Request, void>;
+  routesPath: string;
 }
 
-async function bootstrap(config: BootstrapConfig = {}) {
-  const routesMap = await createRoutesMap();
+async function bootstrap(config: BootstrapConfig) {
+  const routesMap = await createRoutesMap(config.routesPath);
   async function handler(req: Request): Promise<Response> {
     try {
       if (config?.beforeRequest) await config.beforeRequest(req);
@@ -35,8 +36,11 @@ async function bootstrap(config: BootstrapConfig = {}) {
           (await runMiddlewares(req, middlewares)) ||
           (await handler(req)) ||
           new Response("Not Founds");
-      } catch {
+      } catch (error) {
         response = new Response("Oops, internal server error", { status: 500 });
+        if (error instanceof Error) {
+          response = new Response(error.message, { status: 500 });
+        }
       }
 
       return response;

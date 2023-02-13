@@ -1,12 +1,16 @@
 import { HTTPVerb, RouteHandlerModule } from "../types/Routes.ts";
 import * as path from "path";
 
-export function getFileSegmants(file: string): string[] {
+export function getFileSegmants(file: string): string[] | null {
   const fileSegmants = file.split(".");
-  // TODO: Fixme
+  if (fileSegmants.length < 2) return null;
   const fileSuffix = fileSegmants.pop()!;
   const fileName = fileSegmants.join("");
   return [fileName, fileSuffix];
+}
+
+export function isJsFileExt(ext: string) {
+  return ext === "js" || ext === "ts";
 }
 
 export const isHTTPVerb = (str: string): str is HTTPVerb => {
