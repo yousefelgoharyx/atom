@@ -278,10 +278,13 @@
     "https://esm.sh/@swc/core@1.2.212/types.d.ts": "57ab440b40e26a05350f1e06d3977742c249ab20ea46b9103dad876d5d4e5dd5",
     "https://esm.sh/@swc/wasm-web@1.3.35": "e9ad1c6be1b4f143da901e30e67e6d69cc3e01b7c0a428161bf0b627d0b668b0",
     "https://esm.sh/@swc/wasm@1.3.35": "289b662b10c8b5aab1a76a7fa98e673419b47667ebfdab83b8f789b8a51b14b3",
+    "https://esm.sh/acorn@8.8.2": "01afba1d1a6ac63a7de1fa009d4ee3788516c58ffd43a1284283db444f52360f",
     "https://esm.sh/v106/@swc/wasm-web@1.3.35/deno/wasm-web.js": "8f758c57cdb42b6018b2e9243e2e7a6609625a002791ddf039517e16c6dc2084",
     "https://esm.sh/v106/@swc/wasm-web@1.3.35/wasm-web.d.ts": "4027eb757b1d0aa13f9c89d6e13ef5e415d2c0de272611ef97243c5f6e5d8226",
     "https://esm.sh/v106/@swc/wasm@1.3.35/deno/wasm.js": "76050fe62e145ff92c8ee4c2354b578c7751e68349b586cde1be8ffa88f59ec3",
-    "https://esm.sh/v106/@swc/wasm@1.3.35/wasm.d.ts": "072d2f8f4e9c8c460c3e1633c40d2d314a49a39f271bfde378c1b1686a0cbe97"
+    "https://esm.sh/v106/@swc/wasm@1.3.35/wasm.d.ts": "072d2f8f4e9c8c460c3e1633c40d2d314a49a39f271bfde378c1b1686a0cbe97",
+    "https://esm.sh/v106/acorn@8.8.2/deno/acorn.js": "a65c192e35496d1e7b37672661d49c4ea2ab61759ae7c63f870b899555fadfc9",
+    "https://esm.sh/v106/acorn@8.8.2/dist/acorn.d.ts": "b5ab768a8b6f8aa05d10b8923e3fc65438ebf6e3be5c2570e104fbddb9982f9a"
   },
   "npm": {
     "specifiers": {

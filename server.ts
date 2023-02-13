@@ -1,6 +1,6 @@
 import { serve } from "http";
 import { HTTPVerb } from "./src/types/Routes.ts";
-import { createRoutesMap } from "./src/utils/routes.ts";
+import { createRoutesMap } from "./src/packages/router/router.ts";
 import runValidations from "./src/packages/validations/validate.ts";
 import { runMiddlewares } from "./src/packages/middlewares/middlewares.ts";
 
@@ -23,17 +23,23 @@ async function bootstrap(config: BootstrapConfig = {}) {
       const pathname = new URL(req.url).pathname;
       const verb = req.method.toLowerCase() as HTTPVerb;
       const route = routesMap[pathname];
-      if (route) {
-        const middlewares = [route.middlewares, route[verb].middlewares];
-        const handler = route[verb].default;
-        return (
+      if (!route) return new Response("Not Found");
+
+      const middlewares = [route.middlewares, route[verb].middlewares];
+      const handler = route[verb].default;
+
+      let response;
+      try {
+        response =
           (await runValidations(req, route[verb].schema)) ||
           (await runMiddlewares(req, middlewares)) ||
           (await handler(req)) ||
-          new Response("Not Founds")
-        );
+          new Response("Not Founds");
+      } catch {
+        response = new Response("Oops, internal server error", { status: 500 });
       }
-      return new Response("Not Founds");
+
+      return response;
     } finally {
       if (config?.afterRequest) await config.afterRequest(req);
     }
