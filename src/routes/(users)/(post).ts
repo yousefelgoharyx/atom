@@ -1,14 +1,9 @@
 import { RequestHandler } from "../../types/Routes.ts";
-import { z } from "zod";
-
-export const schema = z.object({
-  email: z.string().email(),
-});
+import useBody from "../../packages/hooks/useBody.ts";
+import { User, userSchema } from "./schema/user.ts";
 
 const handler: RequestHandler = async (req) => {
-  const body = await req.json();
-  console.log(body);
-
+  const body = await useBody<User>(userSchema);
   return new Response(
     JSON.stringify({
       msg: "Created user successfully",

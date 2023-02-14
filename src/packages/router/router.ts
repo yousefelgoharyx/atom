@@ -1,11 +1,12 @@
 import { MiddlewareHandler, RequestHandler, Route, Routes } from "../../types/Routes.ts";
 import * as path from "path";
 import {
-  absolutePath,
+  createPathResolver,
   fetchRouteHandlerModule,
   getFileSegmants,
   isHTTPVerb,
   isJsFileExt,
+  isValidDirName,
 } from "../../utils/common.ts";
 export function VoidHandler(_: Request) {
   return;
@@ -36,12 +37,6 @@ export function createEmptyRoute(): Route {
   };
 }
 
-function createPathResolver(base: string) {
-  return function resolvePath(...str: string[]) {
-    return path.posix.join(Deno.cwd(), base, ...str);
-  };
-}
-
 export async function createRoutesMap(basePath: string) {
   const routesMap: Routes = {};
   const currentMiddlewares: MiddlewareHandler[] = [];
@@ -49,16 +44,18 @@ export async function createRoutesMap(basePath: string) {
   async function readRoutes(currentModules: string[]) {
     const modulePath = path.posix.join(...currentModules);
     const moduleAbsolutePath = routesPathResolver(modulePath);
-    console.log(moduleAbsolutePath);
-
-    const route = (routesMap[modulePath] = createEmptyRoute());
+    const httpPath = modulePath.replaceAll("(", "").replaceAll(")", "");
+    const route = (routesMap[httpPath] = createEmptyRoute());
 
     for await (const dirEntry of Deno.readDir(moduleAbsolutePath)) {
+      if (!isValidDirName(dirEntry.name.split(".")[0])) continue;
+
       if (dirEntry.isDirectory) await readRoutes([...currentModules, dirEntry.name]);
       else if (dirEntry.isFile) {
         const fileSegs = getFileSegmants(dirEntry.name);
         if (!fileSegs || !isJsFileExt(fileSegs[1])) continue;
-        const [verb] = fileSegs;
+        const [fileName] = fileSegs;
+        const verb = fileName.slice(1, -1);
         const filePath = routesPathResolver(modulePath, dirEntry.name);
         if (verb === "middleware") {
           const module = await fetchRouteHandlerModule<MiddlewareHandler>(filePath);
@@ -69,7 +66,6 @@ export async function createRoutesMap(basePath: string) {
 
           route[verb].default = module.default;
           route[verb].middlewares = module.middlewares ?? [];
-          route[verb].schema = module.schema;
         }
       }
     }

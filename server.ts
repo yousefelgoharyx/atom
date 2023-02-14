@@ -1,11 +1,18 @@
 import { serve } from "http";
 import { HTTPVerb } from "./src/types/Routes.ts";
 import { createRoutesMap } from "./src/packages/router/router.ts";
-import runValidations from "./src/packages/validations/validate.ts";
 import { runMiddlewares } from "./src/packages/middlewares/middlewares.ts";
 
 export const Atom = {
   bootstrap,
+};
+
+type GlobalContext = {
+  currentRequest: Request | null;
+};
+
+export const globalContext: GlobalContext = {
+  currentRequest: null,
 };
 
 type AsyncOrSyncFn<P, R> = (param: P) => Promise<R> | R;
@@ -20,6 +27,7 @@ async function bootstrap(config: BootstrapConfig) {
   const routesMap = await createRoutesMap(config.routesPath);
   async function handler(req: Request): Promise<Response> {
     try {
+      globalContext.currentRequest = req;
       if (config?.beforeRequest) await config.beforeRequest(req);
       const pathname = new URL(req.url).pathname;
       const verb = req.method.toLowerCase() as HTTPVerb;
@@ -32,7 +40,6 @@ async function bootstrap(config: BootstrapConfig) {
       let response;
       try {
         response =
-          (await runValidations(req, route[verb].schema)) ||
           (await runMiddlewares(req, middlewares)) ||
           (await handler(req)) ||
           new Response("Not Founds");
@@ -40,7 +47,7 @@ async function bootstrap(config: BootstrapConfig) {
         response = new Response("Oops, internal server error", { status: 500 });
         if (error instanceof Error) {
           response = new Response(error.message, { status: 500 });
-        }
+        } else if (error instanceof Response) response = error;
       }
 
       return response;

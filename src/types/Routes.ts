@@ -1,5 +1,3 @@
-import { Schema } from "zod";
-
 export type MiddlewareHandler = (req: Request) => Response | Promise<Response> | void;
 export type RequestHandler = (req: Request) => Response | Promise<Response> | void;
 
@@ -14,7 +12,6 @@ export enum HTTPVerb {
 export type RouteHandlerModule<T> = {
   default: T;
   middlewares: MiddlewareHandler[];
-  schema?: Schema;
 };
 
 type RouteVerbHandler = Record<HTTPVerb, RouteHandlerModule<RequestHandler>>;

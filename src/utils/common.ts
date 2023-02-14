@@ -6,6 +6,7 @@ export function getFileSegmants(file: string): string[] | null {
   if (fileSegmants.length < 2) return null;
   const fileSuffix = fileSegmants.pop()!;
   const fileName = fileSegmants.join("");
+
   return [fileName, fileSuffix];
 }
 
@@ -32,4 +33,14 @@ export async function fetchRouteHandlerModule<T>(
 
 export function absolutePath(...str: string[]) {
   return path.posix.join(Deno.cwd(), ...str);
+}
+
+export function createPathResolver(base: string) {
+  return function resolvePath(...str: string[]) {
+    return path.posix.join(Deno.cwd(), base, ...str);
+  };
+}
+
+export function isValidDirName(dirEntryName: string) {
+  return dirEntryName.startsWith("(") && dirEntryName.endsWith(")");
 }
