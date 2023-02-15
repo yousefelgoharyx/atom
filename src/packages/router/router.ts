@@ -40,6 +40,7 @@ export function createEmptyRoute(): Route {
 export async function createRoutesMap(basePath: string) {
   const routesMap: Routes = {};
   const currentMiddlewares: MiddlewareHandler[] = [];
+
   const routesPathResolver = createPathResolver(basePath);
   async function readRoutes(currentModules: string[]) {
     const modulePath = path.posix.join(...currentModules);
