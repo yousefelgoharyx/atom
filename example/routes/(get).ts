@@ -1,5 +1,4 @@
-import useBody from "../packages/hooks/useBody.ts";
-import { MiddlewareHandler, RequestHandler } from "../types/Routes.ts";
+import { MiddlewareHandler, RequestHandler } from "../../src/types/Routes.ts";
 
 const ageMiddleware: MiddlewareHandler = (req) => {
   const searchString = new URL(req.url).search;

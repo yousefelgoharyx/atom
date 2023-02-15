@@ -1,6 +1,6 @@
 {
   "tasks": {
-    "dev": "deno run -A --watch main.ts"
+    "dev": "deno run -A --watch ./example/main.ts"
   },
   "imports": {
     "http": "https://deno.land/std@0.170.0/http/server.ts",

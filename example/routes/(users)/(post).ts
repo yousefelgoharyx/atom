@@ -1,5 +1,5 @@
-import { RequestHandler } from "../../types/Routes.ts";
-import useBody from "../../packages/hooks/useBody.ts";
+import { RequestHandler } from "../../../src/types/Routes.ts";
+import useBody from "../../../src/packages/hooks/useBody.ts";
 import { User, userSchema } from "./schema/user.ts";
 
 const handler: RequestHandler = async (req) => {

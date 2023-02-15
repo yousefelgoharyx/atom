@@ -1,7 +1,7 @@
-import { Atom } from "./server.ts";
+import { Atom } from "../server.ts";
 async function main() {
   await Atom.bootstrap({
-    routesPath: "./src/routes",
+    routesPath: "example/routes",
     beforeRequest: (req) => {
       console.log("beforeRequest", req.url);
     },
