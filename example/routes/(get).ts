@@ -1,6 +1,6 @@
 import { MiddlewareHandler, RequestHandler } from "@/types.ts";
 
-const ageMiddleware: MiddlewareHandler = (req) => {
+const _ageMiddleware: MiddlewareHandler = (req) => {
   const searchString = new URL(req.url).search;
   const searchParams = new URLSearchParams(searchString);
   const age = searchParams.get("age");

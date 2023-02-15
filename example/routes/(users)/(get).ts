@@ -4,7 +4,7 @@ function adminMiddleware(req: Request) {
     return new Response("not authorized", { status: 404 });
 }
 
-export default function getUsers(req: Request): Response {
+export default function getUsers(): Response {
   return new Response(`Welcome to users mr admin `);
 }
 
