@@ -3,10 +3,6 @@ import { HTTPVerb } from "./src/types/Routes.ts";
 import { createRoutesMap } from "./src/packages/router/router.ts";
 import { runMiddlewares } from "./src/packages/middlewares/middlewares.ts";
 
-export const Atom = {
-  bootstrap,
-};
-
 type GlobalContext = {
   currentRequest: Request | null;
 };
@@ -23,7 +19,7 @@ interface BootstrapConfig {
   routesPath: string;
 }
 
-async function bootstrap(config: BootstrapConfig) {
+export async function bootstrap(config: BootstrapConfig) {
   const routesMap = await createRoutesMap(config.routesPath);
   async function handler(req: Request): Promise<Response> {
     try {

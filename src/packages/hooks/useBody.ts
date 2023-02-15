@@ -1,7 +1,7 @@
 import { ZodError, ZodSchema } from "zod";
 import { globalContext } from "../../../server.ts";
 
-const useBody = async <T>(schema: ZodSchema<T>) => {
+export const useBody = async <T>(schema: ZodSchema<T>) => {
   if (!schema) {
     throw new Error("Schema is required");
   }
@@ -20,5 +20,3 @@ const useBody = async <T>(schema: ZodSchema<T>) => {
     throw new Response("Invalid JSON", { status: 400 });
   }
 };
-
-export default useBody;
