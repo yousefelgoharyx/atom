@@ -1,8 +1,0 @@
-{
-  "tasks": {
-    "dev": "deno run -A --watch ./main.ts"
-  },
-  "imports": {
-    "atom": "https://deno.land/x/atom/mod.ts"
-  }
-}
