@@ -1,7 +1,10 @@
-import { join } from "path";
+import { path } from "../../../deps.ts";
+export const baseRoutesPath = path.join(Deno.cwd(), "h", "src", "routes");
+
 export async function existsDir(path: string): Promise<boolean> {
   try {
     const stat = await Deno.lstat(path);
+
     return stat.isDirectory;
   } catch (err) {
     if (err instanceof Deno.errors.NotFound) {
@@ -24,10 +27,7 @@ export async function existsFile(path: string): Promise<boolean> {
 }
 
 export async function isFolderEmpty(root: string, name: string): Promise<boolean> {
-  const dir = join(root, name);
-  if (await existsFile(dir)) {
-    throw new Error(`Folder ${name} already exists as a file.`);
-  }
+  const dir = path.join(root, name);
   if (await existsDir(dir)) {
     for await (const file of Deno.readDir(dir)) {
       if (file.name !== ".DS_Store") {
@@ -35,5 +35,13 @@ export async function isFolderEmpty(root: string, name: string): Promise<boolean
       }
     }
   }
+
   return true;
+}
+
+export function trimPrefix(s: string, prefix: string): string {
+  if (prefix !== "" && s.startsWith(prefix)) {
+    return s.slice(prefix.length);
+  }
+  return s;
 }
