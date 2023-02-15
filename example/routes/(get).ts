@@ -1,4 +1,4 @@
-import { MiddlewareHandler, RequestHandler } from "@/types.ts";
+import { MiddlewareHandler, RequestHandler } from "../../src/types/Routes.ts";
 
 const _ageMiddleware: MiddlewareHandler = (req) => {
   const searchString = new URL(req.url).search;

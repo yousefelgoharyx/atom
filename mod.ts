@@ -6,6 +6,7 @@ const Atom = {
   useBody: useBody,
 };
 
-export default Atom;
 export { useBody };
-export type { MiddlewareHandler, RequestHandler } from "@/src/types/Routes.ts";
+export type { MiddlewareHandler, RequestHandler } from "./src/types/Routes.ts";
+
+export default Atom;
