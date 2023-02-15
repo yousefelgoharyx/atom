@@ -1,8 +1,8 @@
-import { Schema, z } from "zod";
+import { zod } from "../../../deps.ts";
 
 const runValidations = async (
   req: Request,
-  schema?: Schema
+  schema?: zod.Schema
 ): Promise<Response | void> => {
   if (!schema) return;
   try {
@@ -10,7 +10,7 @@ const runValidations = async (
     schema.parse(json);
     return;
   } catch (error) {
-    if (error instanceof z.ZodError) {
+    if (error instanceof zod.z.ZodError) {
       return new Response(error.message, { status: 400 });
     }
 

@@ -1,7 +1,7 @@
-import { ZodError, ZodSchema } from "zod";
+import { zod } from "../../../deps.ts";
 import { globalContext } from "../../../server.ts";
 
-export const useBody = async <T>(schema: ZodSchema<T>) => {
+export const useBody = async <T>(schema: zod.ZodSchema<T>) => {
   if (!schema) {
     throw new Error("Schema is required");
   }
@@ -13,7 +13,7 @@ export const useBody = async <T>(schema: ZodSchema<T>) => {
     const data = schema.parse(json);
     return data;
   } catch (error) {
-    if (error instanceof ZodError) {
+    if (error instanceof zod.ZodError) {
       throw new Response(error.message, { status: 400 });
     }
 

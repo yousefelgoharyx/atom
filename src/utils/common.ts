@@ -1,5 +1,5 @@
 import { HTTPVerb, RouteHandlerModule } from "../types/Routes.ts";
-import * as path from "path";
+import { path } from "../../deps.ts";
 
 export function getFileSegmants(file: string): string[] | null {
   const fileSegmants = file.split(".");

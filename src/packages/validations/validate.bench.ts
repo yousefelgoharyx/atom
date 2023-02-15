@@ -1,6 +1,7 @@
-import { z } from "zod";
+import { zod } from "../../../deps.ts";
 import validate from "./validate.ts";
 
+const { z } = zod;
 const schema = z.object({
   email: z.string().email(),
 });

@@ -21,7 +21,8 @@ function trimPrefix(s: string, prefix: string): string {
   return s;
 }
 const pkgName = "atom";
-const repo = "yousefelgoharyx/atom";
+const repo = "yousefelgoharyx/atom-templates";
+const VERSION = "0.0.1";
 const newApp = new Command()
   .arguments("<name:string>")
   .description("Creates a new app.")
@@ -29,12 +30,7 @@ const newApp = new Command()
     if (!(await isFolderEmpty(Deno.cwd(), name))) {
       Deno.exit(1);
     }
-    const res = await fetch(`https://cdn.deno.land/${pkgName}/meta/versions.json`);
-    if (res.status !== 200) {
-      console.error(await res.text());
-      Deno.exit(1);
-    }
-    const { latest: VERSION } = await res.json();
+
     const resp = await fetch(
       `https://codeload.github.com/${repo}/tar.gz/refs/tags/${VERSION}`
     );
@@ -48,8 +44,10 @@ const newApp = new Command()
       readerFromStreamReader(resp.body!.pipeThrough<Uint8Array>(gz).getReader())
     );
     const appDir = join(Deno.cwd(), name);
-    const prefix = `${basename(repo)}-${VERSION}/template`;
+    const prefix = `${basename(repo)}-${VERSION}/main`;
     for await (const entry of entryList) {
+      console.log(entry);
+
       if (entry.fileName.startsWith(prefix) && !entry.fileName.endsWith("/README.md")) {
         const fp = join(appDir, trimPrefix(entry.fileName, prefix));
         if (entry.type === "directory") {

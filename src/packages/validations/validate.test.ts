@@ -1,7 +1,8 @@
-import { z } from "zod";
+import { zod } from "../../../deps.ts";
 import validate from "./validate.ts";
 import { assertEquals, assertInstanceOf } from "asserts";
 
+const { z } = zod;
 Deno.test("Should validate schema", async (t) => {
   const schema = z.object({
     email: z.string().email(),

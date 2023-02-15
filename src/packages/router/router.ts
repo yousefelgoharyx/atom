@@ -1,5 +1,5 @@
 import { MiddlewareHandler, RequestHandler, Route, Routes } from "../../types/Routes.ts";
-import * as path from "path";
+import { path } from "../../../deps.ts";
 import {
   createPathResolver,
   fetchRouteHandlerModule,

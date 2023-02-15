@@ -1,4 +1,4 @@
-import { serve } from "http";
+import { http } from "./deps.ts";
 import { HTTPVerb } from "./src/types/Routes.ts";
 import { createRoutesMap } from "./src/packages/router/router.ts";
 import { runMiddlewares } from "./src/packages/middlewares/middlewares.ts";
@@ -51,5 +51,5 @@ export async function bootstrap(config: BootstrapConfig) {
       if (config?.afterRequest) await config.afterRequest(req);
     }
   }
-  await serve(handler, { port: 8080 });
+  await http.serve(handler, { port: 8080 });
 }
