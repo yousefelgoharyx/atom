@@ -1,7 +1,0 @@
-import { RequestHandler } from "atom";
-
-const handler: RequestHandler = (req) => {
-  return new Response("Hello world");
-};
-
-export default handler;
