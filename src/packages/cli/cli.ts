@@ -35,6 +35,7 @@ const generateNewRoute = new Command()
 
 const generate = new Command()
   .name("generate")
+  .arguments("<resource:string>")
   .description("Generates a new resource.")
   .command("route", generateNewRoute);
 

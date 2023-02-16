@@ -1,5 +1,5 @@
 import { path } from "../../../deps.ts";
-export const baseRoutesPath = path.join(Deno.cwd(), "h", "src", "routes");
+export const baseRoutesPath = path.join(Deno.cwd(), "src", "routes");
 
 export async function existsDir(path: string): Promise<boolean> {
   try {

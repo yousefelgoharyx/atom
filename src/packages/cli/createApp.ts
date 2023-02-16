@@ -2,8 +2,8 @@ import { existsDir, trimPrefix } from "./utils.ts";
 import { path } from "../../../deps.ts";
 import { Colors, Untar, readerFromStreamReader, ensureDir, copy } from "./deps.ts";
 
+const URL = "https://api.github.com/repos/yousefelgoharyx/atom-templates/releases/latest";
 const repo = "yousefelgoharyx/atom-templates";
-const VERSION = "0.0.1";
 export default async function createApp(name: string) {
   if (await existsDir(path.join(Deno.cwd(), name))) {
     console.error(
@@ -13,23 +13,24 @@ export default async function createApp(name: string) {
   }
 
   console.log(`${Colors.dim("↓")} Creating your app, this might take a moment...`);
-  const resp = await fetch(
-    `https://codeload.github.com/${repo}/tar.gz/refs/tags/${VERSION}`
-  );
-  if (resp.status !== 200) {
-    console.error(await resp.text());
+  const repoResponse = await fetch(URL);
+  if (repoResponse.status !== 200) {
+    console.error(await repoResponse.text());
     Deno.exit(1);
   }
-
-  const gz = new DecompressionStream("gzip");
-  const entryList = new Untar(
-    readerFromStreamReader(resp.body!.pipeThrough<Uint8Array>(gz).getReader())
+  const { tag_name } = await repoResponse.json();
+  const templateResponse = await fetch(
+    `https://codeload.github.com/${repo}/tar.gz/refs/tags/${tag_name}`
   );
+  const gz = new DecompressionStream("gzip");
+  const reader = templateResponse.body!.pipeThrough<Uint8Array>(gz).getReader();
+  const entryList = new Untar(readerFromStreamReader(reader));
   const appDir = path.join(Deno.cwd(), name);
-  const prefix = `${path.basename(repo)}-${VERSION}/main`;
+  const prefix = `${path.basename(repo)}-${tag_name}/main`;
   for await (const entry of entryList) {
     if (entry.fileName.startsWith(prefix) && !entry.fileName.endsWith("/README.md")) {
       const fp = path.join(appDir, trimPrefix(entry.fileName, prefix));
+
       if (entry.type === "directory") {
         await ensureDir(fp);
         continue;

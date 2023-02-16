@@ -4,23 +4,31 @@ import { Colors, ensureDir } from "./deps.ts";
 import { baseRoutesPath, existsFile } from "./utils.ts";
 export default async function createRoute(routeName: string, verbs: HTTPVerb[]) {
   console.log(`${Colors.dim("↓")} Creating /${routeName} route...`);
-  const routeDir = path.join(baseRoutesPath, `(${routeName})`);
-  await ensureDir(routeDir);
+  const routePath = path.join(baseRoutesPath, `(${routeName})`);
+  await ensureDir(routePath);
   verbs.forEach(async (verb) => {
-    const routePath = path.join(routeDir, `(${verb}).ts`);
-    await createRouteHandler(routePath, verb);
+    const routeVerbPath = path.join(routePath, `(${verb}).ts`);
+    await createRouteHandler(routeVerbPath, verb);
   });
 }
 
-async function createRouteHandler(routePath: string, verb: HTTPVerb) {
-  if (await existsFile(routePath)) {
+async function createRouteHandler(routeVerbPath: string, verb: HTTPVerb) {
+  if (await existsFile(routeVerbPath)) {
     return console.error(
       `${Colors.yellow("warning:")} Route verb ${Colors.bold(
         verb.toUpperCase()
       )} already exists. Skipping...`
     );
   }
-  const contentPath = path.join(Deno.cwd(), "src/packages/cli/content/handler.txt");
-  const content = await Deno.readTextFile(contentPath);
-  return Deno.writeTextFile(routePath, content);
+  return Deno.writeTextFile(
+    routeVerbPath,
+    `import { RequestHandler } from "atom";
+
+  const handler: RequestHandler = (req) => {
+    return new Response("Hello world");
+  };
+  
+  export default handler;
+  `
+  );
 }
