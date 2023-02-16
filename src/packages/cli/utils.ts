@@ -1,4 +1,5 @@
 import { path } from "../../../deps.ts";
+import { HTTPVerb } from "../../types/Routes.ts";
 export const baseRoutesPath = path.join(Deno.cwd(), "src", "routes");
 
 export async function existsDir(path: string): Promise<boolean> {
@@ -44,4 +45,24 @@ export function trimPrefix(s: string, prefix: string): string {
     return s.slice(prefix.length);
   }
   return s;
+}
+
+export function getVerbsFromArgs(arg: string | undefined): HTTPVerb[] {
+  if (!arg) return [];
+  if (arg === "all")
+    return [HTTPVerb.GET, HTTPVerb.POST, HTTPVerb.PUT, HTTPVerb.PATCH, HTTPVerb.DELETE];
+  const args = arg.split(",");
+  const verbs: HTTPVerb[] = [];
+  args.forEach((arg) => {
+    if (
+      arg === HTTPVerb.GET ||
+      arg === HTTPVerb.POST ||
+      arg === HTTPVerb.PUT ||
+      arg === HTTPVerb.PATCH ||
+      arg === HTTPVerb.DELETE
+    ) {
+      verbs.push(arg);
+    }
+  });
+  return verbs;
 }

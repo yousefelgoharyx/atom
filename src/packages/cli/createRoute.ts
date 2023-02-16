@@ -1,11 +1,16 @@
 import { path } from "../../../deps.ts";
 import { HTTPVerb } from "../../types/Routes.ts";
 import { Colors, ensureDir } from "./deps.ts";
-import { baseRoutesPath, existsFile } from "./utils.ts";
-export default async function createRoute(routeName: string, verbs: HTTPVerb[]) {
+import { baseRoutesPath, existsFile, getVerbsFromArgs } from "./utils.ts";
+
+export default async function createRoute(
+  routeName: string,
+  verbsString: string | undefined
+) {
   console.log(`${Colors.dim("↓")} Creating /${routeName} route...`);
   const routePath = path.join(baseRoutesPath, `(${routeName})`);
   await ensureDir(routePath);
+  const verbs = getVerbsFromArgs(verbsString);
   verbs.forEach(async (verb) => {
     const routeVerbPath = path.join(routePath, `(${verb}).ts`);
     await createRouteHandler(routeVerbPath, verb);

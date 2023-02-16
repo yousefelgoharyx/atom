@@ -1,8 +1,6 @@
 import { Command } from "https://deno.land/x/cliffy@v0.25.7/command/mod.ts";
 import createApp from "./createApp.ts";
 import createRoute from "./createRoute.ts";
-import { isHTTPVerb } from "../../utils/common.ts";
-import { HTTPVerb } from "../../types/Routes.ts";
 
 const newApp = new Command()
   .arguments("<name:string>")
@@ -12,29 +10,17 @@ const newApp = new Command()
   });
 
 const generateNewRoute = new Command()
+  .name("route")
   .arguments("<name:string>")
   .description("Creates a new route.")
   .option("-v, --verbs <verbs:string>", "Verbs for the route.")
   .action(async (options, name: string) => {
-    let verbs: HTTPVerb[] = [];
-    if (options.verbs) {
-      if (options.verbs === "all") {
-        verbs = [
-          HTTPVerb.GET,
-          HTTPVerb.POST,
-          HTTPVerb.DELETE,
-          HTTPVerb.PUT,
-          HTTPVerb.PATCH,
-        ];
-      } else {
-        verbs = options.verbs.split(",").filter(isHTTPVerb);
-      }
-    }
-    await createRoute(name, verbs);
+    await createRoute(name, options.verbs);
   });
 
 const generate = new Command()
   .name("generate")
+  .alias("g")
   .arguments("<resource:string>")
   .description("Generates a new resource.")
   .command("route", generateNewRoute);

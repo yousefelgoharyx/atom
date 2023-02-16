@@ -4,6 +4,10 @@ import { Colors, Untar, readerFromStreamReader, ensureDir, copy } from "./deps.t
 
 const URL = "https://api.github.com/repos/yousefelgoharyx/atom-templates/releases/latest";
 const repo = "yousefelgoharyx/atom-templates";
+
+function getTemplateUrl(version: string) {
+  return `https://codeload.github.com/${repo}/tar.gz/refs/tags/${version}`;
+}
 export default async function createApp(name: string) {
   if (await existsDir(path.join(Deno.cwd(), name))) {
     console.error(
@@ -19,18 +23,16 @@ export default async function createApp(name: string) {
     Deno.exit(1);
   }
   const { tag_name } = await repoResponse.json();
-  const templateResponse = await fetch(
-    `https://codeload.github.com/${repo}/tar.gz/refs/tags/${tag_name}`
-  );
+  const templateResponse = await fetch(getTemplateUrl(tag_name));
   const gz = new DecompressionStream("gzip");
   const reader = templateResponse.body!.pipeThrough<Uint8Array>(gz).getReader();
   const entryList = new Untar(readerFromStreamReader(reader));
   const appDir = path.join(Deno.cwd(), name);
   const prefix = `${path.basename(repo)}-${tag_name}/main`;
+
   for await (const entry of entryList) {
     if (entry.fileName.startsWith(prefix) && !entry.fileName.endsWith("/README.md")) {
       const fp = path.join(appDir, trimPrefix(entry.fileName, prefix));
-
       if (entry.type === "directory") {
         await ensureDir(fp);
         continue;
