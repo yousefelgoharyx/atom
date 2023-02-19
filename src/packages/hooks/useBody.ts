@@ -1,7 +1,7 @@
 import { zod } from "../../../deps.ts";
 import { globalContext } from "../../../server.ts";
 
-export const useBody = async <T>(schema: zod.ZodSchema<T>) => {
+export const useBody = async <T>(schema: zod.ZodType<T>) => {
   if (!schema) {
     throw new Error("Schema is required");
   }

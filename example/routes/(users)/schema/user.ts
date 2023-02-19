@@ -1,6 +1,6 @@
-import { z } from "zod";
-export const userSchema = z.object({
-  email: z.string().email(),
+import { zod } from "../../../../deps.ts";
+export const userSchema = zod.z.object({
+  email: zod.z.string().email(),
 });
 
-export type User = z.infer<typeof userSchema>;
+export type User = zod.z.infer<typeof userSchema>;
