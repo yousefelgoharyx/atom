@@ -1,9 +1,11 @@
-import { useBody } from "../../../mod.ts";
+import { useZod } from "../../../src/packages/hooks/useZod.ts";
 import { RequestHandler } from "../../../src/types/Routes.ts";
 import { User, userSchema } from "./schema/user.ts";
 
-const handler: RequestHandler = async () => {
-  const body = await useBody(userSchema);
+export const body = "form-data";
+
+const handler: RequestHandler = async (req) => {
+  const body = await useZod(userSchema);
   return new Response(
     JSON.stringify({
       msg: "Created user successfully",

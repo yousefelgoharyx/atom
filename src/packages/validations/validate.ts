@@ -1,4 +1,27 @@
 import { zod } from "../../../deps.ts";
+import { ContentType } from "../../types/Routes.ts";
+
+export const parseBody = async (
+  req: Request,
+  contentType?: ContentType
+): Promise<void | Response> => {
+  if (!contentType) return;
+  if (contentType === "json") {
+    try {
+      await req.clone().json();
+      return;
+    } catch {
+      return new Response("Invalid JSON");
+    }
+  } else if (contentType === "form-data") {
+    try {
+      await req.formData();
+      return;
+    } catch {
+      return new Response("Invalid form data");
+    }
+  }
+};
 
 const runValidations = async (
   req: Request,

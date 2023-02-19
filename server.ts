@@ -2,6 +2,7 @@ import { http } from "./deps.ts";
 import { HTTPVerb } from "./src/types/Routes.ts";
 import { createRoutesMap } from "./src/packages/router/router.ts";
 import { runMiddlewares } from "./src/packages/middlewares/middlewares.ts";
+import { parseBody } from "./src/packages/validations/validate.ts";
 
 type GlobalContext = {
   currentRequest: Request | null;
@@ -30,12 +31,17 @@ export async function bootstrap(config: BootstrapConfig) {
       const route = routesMap[pathname];
       if (!route) return new Response("Not Found");
 
-      const middlewares = [route.middlewares, route[verb].middlewares];
+      const middlewares = [route.middlewares];
+      const routeVerbMiddlewares = route[verb].middlewares;
+      if (routeVerbMiddlewares) middlewares.push(routeVerbMiddlewares);
+
       const handler = route[verb].default;
+      const bodyType = route[verb].body;
 
       let response;
       try {
         response =
+          (await parseBody(req, bodyType)) ||
           (await runMiddlewares(req, middlewares)) ||
           (await handler(req)) ||
           new Response("Not Founds");

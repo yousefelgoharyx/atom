@@ -60,13 +60,12 @@ export async function createRoutesMap(basePath: string) {
         const filePath = routesPathResolver(modulePath, dirEntry.name);
         if (verb === "middleware") {
           const module = await fetchRouteHandlerModule<MiddlewareHandler>(filePath);
-          const middlewareFn = module.default;
-          currentMiddlewares.push(middlewareFn);
+          currentMiddlewares.push(module.default);
         } else if (isHTTPVerb(verb)) {
           const module = await fetchRouteHandlerModule<RequestHandler>(filePath);
-
           route[verb].default = module.default;
-          route[verb].middlewares = module.middlewares ?? [];
+          route[verb].body = module.body;
+          route[verb].middlewares = module.middlewares;
         }
       }
     }

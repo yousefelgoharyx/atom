@@ -9,9 +9,11 @@ export enum HTTPVerb {
   DELETE = "delete",
 }
 
+export type ContentType = "json" | "form-data";
 export type RouteHandlerModule<T> = {
   default: T;
-  middlewares: MiddlewareHandler[];
+  middlewares?: MiddlewareHandler[];
+  body?: ContentType;
 };
 
 type RouteVerbHandler = Record<HTTPVerb, RouteHandlerModule<RequestHandler>>;

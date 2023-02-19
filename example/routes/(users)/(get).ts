@@ -3,8 +3,12 @@ function adminMiddleware(req: Request) {
   if (urlParams.get("name") !== "admin")
     return new Response("not authorized", { status: 404 });
 }
+export const contentType = "form-data";
 
-export default function getUsers(): Response {
+export default async function getUsers(req: Request): Promise<Response> {
+  const body = await req.json();
+  console.log(body);
+
   return new Response(`Welcome to users mr admin `);
 }
 
