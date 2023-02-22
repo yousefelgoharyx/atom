@@ -5,7 +5,7 @@ import { userSchema } from "./schema/user.ts";
 
 export const body = "json";
 
-const handler: RequestHandler = async (req) => {
+const handler: RequestHandler = async () => {
   const body = await useZod(userSchema);
   db.prepare("INSERT INTO users (name, email) VALUES (?, ?)").run(body.name, body.email);
 

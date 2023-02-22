@@ -1,6 +1,6 @@
 import { db } from "../../main.ts";
 
-export default async function getUsers(req: Request): Promise<Response> {
+export default function getUsers(): Response {
   const userse = db.prepare("SELECT * FROM users");
   const rows = userse.all();
 
