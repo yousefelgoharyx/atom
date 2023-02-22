@@ -1,15 +1,8 @@
-function adminMiddleware(req: Request) {
-  const urlParams = new URLSearchParams(new URL(req.url).search);
-  if (urlParams.get("name") !== "admin")
-    return new Response("not authorized", { status: 404 });
-}
-export const contentType = "form-data";
+import { db } from "../../main.ts";
 
 export default async function getUsers(req: Request): Promise<Response> {
-  const body = await req.json();
-  console.log(body);
+  const userse = db.prepare("SELECT * FROM users");
+  const rows = userse.all();
 
-  return new Response(`Welcome to users mr admin `);
+  return new Response(JSON.stringify(rows));
 }
-
-export const middlewares = [adminMiddleware];

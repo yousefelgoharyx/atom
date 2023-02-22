@@ -1,16 +1,24 @@
 import { useZod } from "../../../src/packages/hooks/useZod.ts";
 import { RequestHandler } from "../../../src/types/Routes.ts";
-import { User, userSchema } from "./schema/user.ts";
+import { db } from "../../main.ts";
+import { userSchema } from "./schema/user.ts";
 
-export const body = "form-data";
+export const body = "json";
 
 const handler: RequestHandler = async (req) => {
   const body = await useZod(userSchema);
+  db.prepare("INSERT INTO users (name, email) VALUES (?, ?)").run(body.name, body.email);
+
   return new Response(
     JSON.stringify({
-      msg: "Created user successfully",
+      message: "User created successfully",
       user: body,
-    })
+    }),
+    {
+      headers: {
+        "content-type": "application/json",
+      },
+    }
   );
 };
 

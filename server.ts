@@ -21,6 +21,8 @@ interface BootstrapConfig {
 }
 
 export async function bootstrap(config: BootstrapConfig) {
+  console.log("HEY");
+
   const routesMap = await createRoutesMap(config.routesPath);
   async function handler(req: Request): Promise<Response> {
     try {

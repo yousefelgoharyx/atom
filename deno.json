@@ -1,6 +1,14 @@
 {
   "tasks": {
-    "dev": "deno run -A --watch ./example/main.ts",
+    "dev": "deno run -A --allow-ffi --unstable --watch ./example/main.ts",
     "cli": "deno run -A ./src/packages/cli/cli.ts"
+  },
+  "imports": {
+    "typeorm": "https://denolib.com/denolib/typeorm@v0.2.23-rc10/mod.ts",
+    "sqlite": "https://deno.land/x/sqlite3@0.8.0/mod.ts",
+    "reflect-metadata": "https://esm.sh/reflect-metadata@0.1.13"
+  },
+  "compilerOptions": {
+    "strictPropertyInitialization": false
   }
 }
