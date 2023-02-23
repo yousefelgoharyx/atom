@@ -608,6 +608,7 @@
     "https://deno.land/x/mysql@v2.7.0/src/packets/parsers/handshake.ts": "91c0fd4b561e17fe4a7a48743d26c130c4060f47a09979b5403484ac85569344",
     "https://deno.land/x/mysql@v2.7.0/src/packets/parsers/result.ts": "abe820d5e40aed4ffe0c41f250fe76b2a8cef593890790600c26370f0f43a4e3",
     "https://deno.land/x/mysql@v2.7.0/src/pool.ts": "395bdd91f5864f21ee3021281baf61c6972b9452b321ff91b99e9e32078dad1c",
+    "https://deno.land/x/path_to_regexp@v6.2.1/index.ts": "894060567837bae8fc9c5cbd4d0a05e9024672083d5883b525c031eea940e556",
     "https://deno.land/x/plug@1.0.1/deps.ts": "35ea2acd5e3e11846817a429b7ef4bec47b80f2d988f5d63797147134cbd35c2",
     "https://deno.land/x/plug@1.0.1/download.ts": "8d6a023ade0806a0653b48cd5f6f8b15fcfaa1dbf2aa1f4bc90fc5732d27b144",
     "https://deno.land/x/plug@1.0.1/mod.ts": "5dec80ee7a3a325be45c03439558531bce7707ac118f4376cebbd6740ff24bfb",

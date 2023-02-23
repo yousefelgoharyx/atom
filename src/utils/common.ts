@@ -42,5 +42,16 @@ export function createPathResolver(base: string) {
 }
 
 export function isValidDirName(dirEntryName: string) {
-  return dirEntryName.startsWith("(") && dirEntryName.endsWith(")");
+  return (
+    (dirEntryName.startsWith("(") && dirEntryName.endsWith(")")) ||
+    (dirEntryName.startsWith("[") && dirEntryName.endsWith("]"))
+  );
+}
+
+export function getHttpPath(modulePath: string) {
+  return modulePath
+    .replaceAll("(", "")
+    .replaceAll(")", "")
+    .replaceAll("[", ":")
+    .replaceAll("]", "");
 }

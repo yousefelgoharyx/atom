@@ -4,6 +4,7 @@ import {
   createPathResolver,
   fetchRouteHandlerModule,
   getFileSegmants,
+  getHttpPath,
   isHTTPVerb,
   isJsFileExt,
   isValidDirName,
@@ -15,23 +16,18 @@ export function createEmptyRoute(): Route {
   return {
     get: {
       default: VoidHandler,
-      middlewares: [],
     },
     post: {
       default: VoidHandler,
-      middlewares: [],
     },
     put: {
       default: VoidHandler,
-      middlewares: [],
     },
     patch: {
       default: VoidHandler,
-      middlewares: [],
     },
     delete: {
       default: VoidHandler,
-      middlewares: [],
     },
     middlewares: [],
   };
@@ -45,17 +41,19 @@ export async function createRoutesMap(basePath: string) {
   async function readRoutes(currentModules: string[]) {
     const modulePath = path.posix.join(...currentModules);
     const moduleAbsolutePath = routesPathResolver(modulePath);
-    const httpPath = modulePath.replaceAll("(", "").replaceAll(")", "");
+    const httpPath = getHttpPath(modulePath);
+
     const route = (routesMap[httpPath] = createEmptyRoute());
 
     for await (const dirEntry of Deno.readDir(moduleAbsolutePath)) {
       if (!isValidDirName(dirEntry.name.split(".")[0])) continue;
-
       if (dirEntry.isDirectory) await readRoutes([...currentModules, dirEntry.name]);
       else if (dirEntry.isFile) {
         const fileSegs = getFileSegmants(dirEntry.name);
         if (!fileSegs || !isJsFileExt(fileSegs[1])) continue;
         const [fileName] = fileSegs;
+
+        // (get) -> get
         const verb = fileName.slice(1, -1);
         const filePath = routesPathResolver(modulePath, dirEntry.name);
         if (verb === "middleware") {

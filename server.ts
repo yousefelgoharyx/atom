@@ -3,13 +3,13 @@ import { HTTPVerb } from "./src/types/Routes.ts";
 import { createRoutesMap } from "./src/packages/router/router.ts";
 import { runMiddlewares } from "./src/packages/middlewares/middlewares.ts";
 import { parseBody } from "./src/packages/validations/validate.ts";
-
+import { pathToRegexp, path } from "./deps.ts";
 type GlobalContext = {
-  currentRequest: Request | null;
+  request: Request | null;
 };
 
 export const globalContext: GlobalContext = {
-  currentRequest: null,
+  request: null,
 };
 
 type AsyncOrSyncFn<P, R> = (param: P) => Promise<R> | R;
@@ -21,16 +21,17 @@ interface BootstrapConfig {
 }
 
 export async function bootstrap(config: BootstrapConfig) {
-  console.log("HEY");
-
   const routesMap = await createRoutesMap(config.routesPath);
+  console.log(routesMap);
+
   async function handler(req: Request): Promise<Response> {
     try {
-      globalContext.currentRequest = req;
+      globalContext.request = req;
       if (config?.beforeRequest) await config.beforeRequest(req);
       const pathname = new URL(req.url).pathname;
       const verb = req.method.toLowerCase() as HTTPVerb;
       const route = routesMap[pathname];
+
       if (!route) return new Response("Not Found");
 
       const middlewares = [route.middlewares];
