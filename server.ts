@@ -3,7 +3,6 @@ import { HTTPVerb } from "./src/types/Routes.ts";
 import { createRoutesMap } from "./src/packages/router/router.ts";
 import { runMiddlewares } from "./src/packages/middlewares/middlewares.ts";
 import { parseBody } from "./src/packages/validations/validate.ts";
-import { pathToRegexp, path } from "./deps.ts";
 type GlobalContext = {
   request: Request | null;
 };
