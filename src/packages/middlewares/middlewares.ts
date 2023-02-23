@@ -1,9 +1,8 @@
-import { MiddlewareHandler } from "../../types/Routes.ts";
+import { HTTPVerb, Route } from "../../types/Routes.ts";
 
-export async function runMiddlewares(
-  request: Request,
-  middlewaresList: MiddlewareHandler[][]
-) {
+export async function runMiddlewares(request: Request, route: Route) {
+  const verb = request.method.toLowerCase() as HTTPVerb;
+  const middlewaresList = [route.middlewares, route[verb].middlewares || []];
   let responseOverride: Response | void;
   for (const middlewares of middlewaresList) {
     for (const middleware of middlewares) {

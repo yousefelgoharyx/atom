@@ -1,5 +1,5 @@
-import { HTTPVerb, RouteHandlerModule } from "../types/Routes.ts";
-import { path } from "../../deps.ts";
+import { HTTPVerb, RouteHandlerModule, Routes } from "../types/Routes.ts";
+import { path, pathToRegexp } from "../../deps.ts";
 
 export function getFileSegmants(file: string): string[] | null {
   const fileSegmants = file.split(".");
@@ -54,4 +54,20 @@ export function getHttpPath(modulePath: string) {
     .replaceAll(")", "")
     .replaceAll("[", ":")
     .replaceAll("]", "");
+}
+
+export function matchRoute(routes: Routes, pathname: string) {
+  let pathObject = null;
+  for (const routePath in routes) {
+    const matcher = pathToRegexp.match(routePath);
+    const result = matcher(pathname);
+    if (result) {
+      pathObject = {
+        route: routes[routePath],
+        params: result.params,
+      };
+      break;
+    }
+  }
+  return pathObject;
 }

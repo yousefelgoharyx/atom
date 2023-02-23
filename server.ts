@@ -1,15 +1,17 @@
-import { http } from "./deps.ts";
+import { http, pathToRegexp } from "./deps.ts";
 import { HTTPVerb } from "./src/types/Routes.ts";
 import { createRoutesMap } from "./src/packages/router/router.ts";
 import { runMiddlewares } from "./src/packages/middlewares/middlewares.ts";
 import { parseBody } from "./src/packages/validations/validate.ts";
-import { pathToRegexp, path } from "./deps.ts";
+import { matchRoute } from "./src/utils/common.ts";
 type GlobalContext = {
   request: Request | null;
+  requestParams: pathToRegexp.MatchResult["params"];
 };
 
 export const globalContext: GlobalContext = {
   request: null,
+  requestParams: {},
 };
 
 type AsyncOrSyncFn<P, R> = (param: P) => Promise<R> | R;
@@ -30,14 +32,12 @@ export async function bootstrap(config: BootstrapConfig) {
       if (config?.beforeRequest) await config.beforeRequest(req);
       const pathname = new URL(req.url).pathname;
       const verb = req.method.toLowerCase() as HTTPVerb;
-      const route = routesMap[pathname];
 
-      if (!route) return new Response("Not Found");
-
-      const middlewares = [route.middlewares];
-      const routeVerbMiddlewares = route[verb].middlewares;
-      if (routeVerbMiddlewares) middlewares.push(routeVerbMiddlewares);
-
+      const routeObject = matchRoute(routesMap, pathname);
+      if (!routeObject) return new Response("Not Found");
+      const route = routeObject.route;
+      const params = routeObject.params;
+      globalContext.requestParams = params;
       const handler = route[verb].default;
       const bodyType = route[verb].body;
 
@@ -45,7 +45,7 @@ export async function bootstrap(config: BootstrapConfig) {
       try {
         response =
           (await parseBody(req, bodyType)) ||
-          (await runMiddlewares(req, middlewares)) ||
+          (await runMiddlewares(req, route)) ||
           (await handler(req)) ||
           new Response("Not Founds");
       } catch (error) {
