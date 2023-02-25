@@ -1,15 +1,10 @@
 import { zod } from "../../../deps.ts";
-import { globalContext } from "../../../server.ts";
+import useRequest from "./useRequest.ts";
 
 export const useZod = async <T>(schema: zod.ZodType<T>) => {
-  if (!schema) {
-    throw new Error("Schema is required");
-  }
-  if (!globalContext.request) {
-    throw new Error("Hook should be called inside a handler");
-  }
+  const request = useRequest();
   try {
-    const json = await globalContext.request.clone().json();
+    const json = await request.clone().json();
     return schema.parse(json);
   } catch (error) {
     if (error instanceof zod.ZodError) {

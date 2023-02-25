@@ -24,8 +24,6 @@ interface BootstrapConfig {
 
 export async function bootstrap(config: BootstrapConfig) {
   const routesMap = await createRoutesMap(config.routesPath);
-  console.log(routesMap);
-
   async function handler(req: Request): Promise<Response> {
     try {
       globalContext.request = req;
@@ -37,9 +35,10 @@ export async function bootstrap(config: BootstrapConfig) {
       if (!routeObject) return new Response("Not Found");
       const route = routeObject.route;
       const params = routeObject.params;
-      globalContext.requestParams = params;
       const handler = route[verb].default;
       const bodyType = route[verb].body;
+
+      globalContext.requestParams = params;
 
       let response;
       try {
@@ -47,7 +46,7 @@ export async function bootstrap(config: BootstrapConfig) {
           (await parseBody(req, bodyType)) ||
           (await runMiddlewares(req, route)) ||
           (await handler(req)) ||
-          new Response("Not Founds");
+          new Response("Not Found");
       } catch (error) {
         response = new Response("Oops, internal server error", { status: 500 });
         if (error instanceof Error) {
@@ -58,6 +57,7 @@ export async function bootstrap(config: BootstrapConfig) {
       return response;
     } finally {
       if (config?.afterRequest) await config.afterRequest(req);
+      globalContext.request = null;
     }
   }
   await http.serve(handler, { port: 8080 });
