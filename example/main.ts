@@ -5,7 +5,8 @@ export const db = new Database("test.db");
 
 async function main() {
   await Atom.bootstrap({
-    routesPath: "example/routes",
+    routesDir: "example/routes",
+    publicDir: "example/public",
   });
   db.close();
 }

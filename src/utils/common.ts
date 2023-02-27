@@ -58,13 +58,14 @@ export function getHttpPath(modulePath: string) {
 
 export function matchRoute(routes: Routes, pathname: string) {
   let pathObject = null;
+  if (routes[pathname]) return { route: routes[pathname], params: null };
   for (const routePath in routes) {
     const matcher = pathToRegexp.match(routePath);
     const result = matcher(pathname);
     if (result) {
       pathObject = {
         route: routes[routePath],
-        params: result.params,
+        params: result.params as any,
       };
       break;
     }

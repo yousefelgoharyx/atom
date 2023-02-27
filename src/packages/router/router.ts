@@ -33,7 +33,7 @@ export function createEmptyRoute(): Route {
   };
 }
 
-export async function createRoutesMap(basePath: string) {
+export async function createRoutesMap(basePath: string | undefined = "routes") {
   const routesMap: Routes = {};
   const currentMiddlewares: MiddlewareHandler[] = [];
 
