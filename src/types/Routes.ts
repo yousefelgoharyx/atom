@@ -1,5 +1,9 @@
-export type MiddlewareHandler = (req: Request) => Response | Promise<Response> | void;
-export type RequestHandler = (req: Request) => Response | Promise<Response> | void;
+export type MiddlewareHandler = (
+  req: Request
+) => Response | Promise<Response | undefined> | void;
+export type RequestHandler = (
+  req: Request
+) => Response | Promise<Response | undefined> | void;
 
 export enum HTTPVerb {
   GET = "get",
