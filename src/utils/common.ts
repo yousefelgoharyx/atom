@@ -72,3 +72,9 @@ export function matchRoute(routes: Routes, pathname: string) {
   }
   return pathObject;
 }
+
+export function NotFound() {
+  return new Response("Not Found", {
+    status: 404,
+  });
+}

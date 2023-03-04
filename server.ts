@@ -3,7 +3,7 @@ import { HTTPVerb } from "./src/types/Routes.ts";
 import { createRoutesMap } from "./src/packages/router/router.ts";
 import { runMiddlewares } from "./src/packages/middlewares/middlewares.ts";
 import { parseBody } from "./src/packages/validations/validate.ts";
-import { matchRoute } from "./src/utils/common.ts";
+import { matchRoute, NotFound } from "./src/utils/common.ts";
 type GlobalContext = {
   request: Request | null;
   requestParams: Record<string, string>;
@@ -42,6 +42,7 @@ export async function bootstrap(config: BootstrapConfig) {
 
       const { route, params } = routeObject;
       const handler = route[verb].default;
+      if (!handler) return NotFound();
       const bodyType = route[verb].body;
       globalContext.requestParams = params;
 
@@ -51,12 +52,10 @@ export async function bootstrap(config: BootstrapConfig) {
           (await parseBody(req, bodyType)) ||
           (await runMiddlewares(req, route)) ||
           (await handler(req)) ||
-          new Response("Not Found");
+          NotFound();
       } catch (error) {
         response = new Response("Oops, internal server error", { status: 500 });
-        if (error instanceof Error) {
-          response = new Response(error.message, { status: 500 });
-        } else if (error instanceof Response) response = error;
+        if (error instanceof Response) response = error;
       }
 
       return response;

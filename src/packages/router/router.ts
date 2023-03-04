@@ -14,21 +14,11 @@ export function VoidHandler(_: Request) {
 }
 export function createEmptyRoute(): Route {
   return {
-    get: {
-      default: VoidHandler,
-    },
-    post: {
-      default: VoidHandler,
-    },
-    put: {
-      default: VoidHandler,
-    },
-    patch: {
-      default: VoidHandler,
-    },
-    delete: {
-      default: VoidHandler,
-    },
+    get: {},
+    post: {},
+    put: {},
+    patch: {},
+    delete: {},
     middlewares: [],
   };
 }
@@ -57,7 +47,7 @@ export async function createRoutesMap(basePath: string | undefined = "routes") {
         const filePath = routesPathResolver(modulePath, dirEntry.name);
         if (verb === "middleware") {
           const module = await fetchRouteHandlerModule<MiddlewareHandler>(filePath);
-          currentMiddlewares.push(module.default);
+          if (module.default) currentMiddlewares.push(module.default);
         } else if (isHTTPVerb(verb)) {
           const module = await fetchRouteHandlerModule<RequestHandler>(filePath);
           route[verb].default = module.default;

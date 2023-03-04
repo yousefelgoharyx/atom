@@ -1,9 +1,7 @@
 export type MiddlewareHandler = (
   req: Request
-) => Response | Promise<Response | undefined> | void;
-export type RequestHandler = (
-  req: Request
-) => Response | Promise<Response | undefined> | void;
+) => Response | void | Promise<Response | void>;
+export type RequestHandler = (req: Request) => Response | void | Promise<Response | void>;
 
 export enum HTTPVerb {
   GET = "get",
@@ -15,7 +13,7 @@ export enum HTTPVerb {
 
 export type ContentType = "json" | "form-data";
 export type RouteHandlerModule<T> = {
-  default: T;
+  default?: T;
   middlewares?: MiddlewareHandler[];
   body?: ContentType;
 };
