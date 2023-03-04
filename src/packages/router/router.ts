@@ -42,18 +42,17 @@ export async function createRoutesMap(basePath: string | undefined = "routes") {
     const modulePath = path.posix.join(...currentModules);
     const moduleAbsolutePath = routesPathResolver(modulePath);
     const httpPath = getHttpPath(modulePath);
-
     const route = (routesMap[httpPath] = createEmptyRoute());
-
+    const pendingDirReads = [];
     for await (const dirEntry of Deno.readDir(moduleAbsolutePath)) {
       if (!isValidDirName(dirEntry.name.split(".")[0])) continue;
-      if (dirEntry.isDirectory) await readRoutes([...currentModules, dirEntry.name]);
-      else if (dirEntry.isFile) {
-        const fileSegs = getFileSegmants(dirEntry.name);
-        if (!fileSegs || !isJsFileExt(fileSegs[1])) continue;
-        const [fileName] = fileSegs;
+      if (dirEntry.isDirectory) {
+        pendingDirReads.push([...currentModules, dirEntry.name]);
+      } else if (dirEntry.isFile) {
+        const segmants = getFileSegmants(dirEntry.name);
+        if (!segmants || !isJsFileExt(segmants[1])) continue;
+        const [fileName] = segmants;
 
-        // (get) -> get
         const verb = fileName.slice(1, -1);
         const filePath = routesPathResolver(modulePath, dirEntry.name);
         if (verb === "middleware") {
@@ -67,9 +66,15 @@ export async function createRoutesMap(basePath: string | undefined = "routes") {
         }
       }
     }
+
     route.middlewares.push(...currentMiddlewares);
+    for (const pendingDirRead of pendingDirReads) {
+      await readRoutes(pendingDirRead);
+      if (currentMiddlewares.length) currentMiddlewares.pop();
+    }
   }
 
   await readRoutes(["/"]);
+
   return routesMap;
 }
