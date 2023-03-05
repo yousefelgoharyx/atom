@@ -1,5 +1,6 @@
 import { HTTPVerb, RouteHandlerModule, Routes } from "../types/Routes.ts";
 import { path, pathToRegexp } from "../../deps.ts";
+import { importModule } from "https://deno.land/x/import@v0.1.7/mod.ts";
 
 export function getFileSegmants(file: string): string[] | null {
   const fileSegmants = file.split(".");
@@ -28,7 +29,7 @@ export async function fetchRouteHandlerModule<T>(
   modulePath: string
 ): Promise<RouteHandlerModule<T>> {
   const filePath = path.toFileUrl(modulePath);
-  return await import(filePath.href);
+  return await importModule(filePath.href);
 }
 
 export function absolutePath(...str: string[]) {

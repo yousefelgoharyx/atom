@@ -15,8 +15,7 @@ export const parseBody = async (
     }
   } else if (contentType === "form-data") {
     try {
-      await req.formData();
-      return;
+      await req.clone().formData();
     } catch {
       return new Response("Invalid form data");
     }
