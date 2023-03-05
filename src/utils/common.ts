@@ -29,7 +29,7 @@ export async function fetchRouteHandlerModule<T>(
   modulePath: string
 ): Promise<RouteHandlerModule<T>> {
   const filePath = path.toFileUrl(modulePath);
-  return await importModule(filePath.href);
+  return await import(filePath.href);
 }
 
 export function absolutePath(...str: string[]) {
