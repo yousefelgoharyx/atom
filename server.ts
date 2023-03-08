@@ -21,9 +21,11 @@ interface BootstrapConfig {
   afterRequest?: AsyncOrSyncFn<Request, void>;
   routesDir?: string;
   publicDir?: string;
+  port?: number;
 }
 
 export async function bootstrap(config: BootstrapConfig) {
+  const { port = 8080 } = config;
   const routes = await createRoutesMap(config.routesDir);
   async function handler(req: Request): Promise<Response> {
     try {
@@ -64,5 +66,5 @@ export async function bootstrap(config: BootstrapConfig) {
       globalContext.request = null;
     }
   }
-  await http.serve(handler, { port: 8080 });
+  await http.serve(handler, { port });
 }

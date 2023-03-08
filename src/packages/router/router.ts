@@ -2,7 +2,7 @@ import { MiddlewareHandler, RequestHandler, Route, Routes } from "../../types/Ro
 import { path } from "../../../deps.ts";
 import {
   createPathResolver,
-  fetchRouteHandlerModule,
+  fetchModule,
   getFileSegmants,
   getHttpPath,
   isHTTPVerb,
@@ -26,11 +26,11 @@ export function createEmptyRoute(): Route {
 export async function createRoutesMap(basePath: string | undefined = "routes") {
   const routesMap: Routes = {};
   const currentMiddlewares: MiddlewareHandler[] = [];
+  const routesResolver = createPathResolver(basePath);
 
-  const routesPathResolver = createPathResolver(basePath);
   async function readRoutes(currentModules: string[]) {
     const modulePath = path.posix.join(...currentModules);
-    const moduleAbsolutePath = routesPathResolver(modulePath);
+    const moduleAbsolutePath = routesResolver(modulePath);
     const httpPath = getHttpPath(modulePath);
     const route = (routesMap[httpPath] = createEmptyRoute());
     const pendingDirReads = [];
@@ -44,15 +44,15 @@ export async function createRoutesMap(basePath: string | undefined = "routes") {
         const [fileName] = segmants;
 
         const verb = fileName.slice(1, -1);
-        const filePath = routesPathResolver(modulePath, dirEntry.name);
-        if (verb === "middleware") {
-          const module = await fetchRouteHandlerModule<MiddlewareHandler>(filePath);
-          if (module.default) currentMiddlewares.push(module.default);
-        } else if (isHTTPVerb(verb)) {
-          const module = await fetchRouteHandlerModule<RequestHandler>(filePath);
+        const filePath = routesResolver(modulePath, dirEntry.name);
+        if (isHTTPVerb(verb)) {
+          const module = await fetchModule<RequestHandler>(filePath);
           route[verb].default = module.default;
           route[verb].body = module.body;
           route[verb].middlewares = module.middlewares;
+        } else if (verb === "middleware") {
+          const module = await fetchModule<MiddlewareHandler>(filePath);
+          if (module.default) currentMiddlewares.push(module.default);
         }
       }
     }
