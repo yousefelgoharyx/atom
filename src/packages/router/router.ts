@@ -23,7 +23,7 @@ export function createEmptyRoute(): Route {
   };
 }
 
-export async function createRoutesMap(basePath: string | undefined = "routes") {
+export async function createRoutesMap(basePath: string) {
   const routesMap: Routes = {};
   const currentMiddlewares: MiddlewareHandler[] = [];
   const routesResolver = createPathResolver(basePath);
@@ -67,4 +67,11 @@ export async function createRoutesMap(basePath: string | undefined = "routes") {
   await readRoutes(["/"]);
 
   return routesMap;
+}
+
+export async function watchRoutes(routesDir: string, routesRef: { value: Routes }) {
+  const watcher = Deno.watchFs(routesDir || "routes");
+  for await (const event of watcher) {
+    if (event.kind === "create") routesRef.value = await createRoutesMap(routesDir);
+  }
 }

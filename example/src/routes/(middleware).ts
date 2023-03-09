@@ -1,4 +1,4 @@
-import { MiddlewareHandler } from "../../src/types/Routes.ts";
+import { MiddlewareHandler } from "../../../src/types/Routes.ts";
 
 const homeMiddleware: MiddlewareHandler = () => {};
 

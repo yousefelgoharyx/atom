@@ -1,4 +1,4 @@
-import { bootstrap } from "./server.ts";
+import { bootstrap, install, PluginConfig } from "./server.ts";
 import { useZod } from "./src/packages/hooks/useZod.ts";
 import { useParams } from "./src/packages/hooks/useParams.ts";
 import { HttpStatus } from "./src/packages/common/enums.ts";
@@ -10,10 +10,11 @@ const Atom = {
   useParams,
   HttpStatus,
   AtomResponse,
+  install,
 };
 
-export { bootstrap, useZod, useParams, HttpStatus, AtomResponse, Atom };
+export { bootstrap, useZod, useParams, HttpStatus, AtomResponse, Atom, install };
 
 export type { MiddlewareHandler, RequestHandler } from "./src/types/Routes.ts";
-
+export type { PluginConfig };
 export default Atom;

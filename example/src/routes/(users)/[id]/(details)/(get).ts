@@ -1,4 +1,4 @@
-import { useParams } from "../../../../../src/packages/hooks/useParams.ts";
+import { useParams } from "../../../../../../src/packages/hooks/useParams.ts";
 
 export default function getUsers(): Response {
   const params = useParams();

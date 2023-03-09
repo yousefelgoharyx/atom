@@ -7,8 +7,9 @@ export default async function createRoute(
   routeName: string,
   verbsString: string | undefined
 ) {
-  console.log(`${Colors.dim("↓")} Creating /${routeName} route...`);
-  const routePath = path.join(baseRoutesPath, `(${routeName})`);
+  console.log(`${Colors.dim("↓")} Creating ${Colors.magenta(`/${routeName}`)}...`);
+  const routeNames = routeName.split("/").map((name) => `(${name})`);
+  const routePath = path.join(baseRoutesPath, ...routeNames);
   await ensureDir(routePath);
   const verbs = getVerbsFromArgs(verbsString);
   verbs.forEach(async (verb) => {
