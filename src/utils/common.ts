@@ -35,14 +35,15 @@ export function absolutePath(...str: string[]) {
 
 export function createPathResolver(base: string) {
   return function resolvePath(...str: string[]) {
-    return path.posix.join(Deno.cwd(), base, ...str);
+    return path.join(Deno.cwd(), base, ...str);
   };
 }
 
 export function isValidDirName(dirEntryName: string) {
   return (
     (dirEntryName.startsWith("(") && dirEntryName.endsWith(")")) ||
-    (dirEntryName.startsWith("[") && dirEntryName.endsWith("]"))
+    (dirEntryName.startsWith("[") && dirEntryName.endsWith("]")) ||
+    dirEntryName.startsWith("@")
   );
 }
 

@@ -18,7 +18,7 @@ async function main() {
 
   await Atom.bootstrap({
     routesDir: "example/src/routes",
-    publicDir: "example/src/public",
+    publicDir: "example/public",
   });
 }
 

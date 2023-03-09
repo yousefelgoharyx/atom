@@ -1,11 +1,11 @@
 import { useZod } from "../../../../src/packages/hooks/useZod.ts";
 import { RequestHandler } from "../../../../src/types/Routes.ts";
-import { userSchema } from "./schema/user.ts";
+import { UserDTOSchema } from "../../models/User.ts";
 
 export const body = "json";
 
 const handler: RequestHandler = async () => {
-  const body = await useZod(userSchema);
+  const body = await useZod(UserDTOSchema);
 
   return new Response(
     JSON.stringify({

@@ -50,6 +50,10 @@ export async function bootstrap(config: BootstrapConfig) {
       const verb = request.method.toLowerCase() as HTTPVerb;
       const routeObject = matchRoute(routesRef, pathname);
 
+      if (pathname === "/debug") {
+        return new Response(JSON.stringify(routesRef.value));
+      }
+
       if (!routeObject) {
         return fileServer.serveDir(request, {
           fsRoot: path.join(Deno.cwd(), config.publicDir ?? "public"),

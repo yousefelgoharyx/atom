@@ -29,13 +29,14 @@ export async function createRoutesMap(basePath: string) {
   const routesResolver = createPathResolver(basePath);
 
   async function readRoutes(currentModules: string[]) {
-    const modulePath = path.posix.join(...currentModules);
-    const moduleAbsolutePath = routesResolver(modulePath);
-    const httpPath = getHttpPath(modulePath);
+    const modulePath = routesResolver(...currentModules);
+    const httpPathModules = currentModules.filter((module) => !module.startsWith("@"));
+    const httpPath = getHttpPath(path.posix.join(...httpPathModules));
     const route = (routesMap[httpPath] = createEmptyRoute());
     const pendingDirReads = [];
-    for await (const dirEntry of Deno.readDir(moduleAbsolutePath)) {
+    for await (const dirEntry of Deno.readDir(modulePath)) {
       if (!isValidDirName(dirEntry.name.split(".")[0])) continue;
+
       if (dirEntry.isDirectory) {
         pendingDirReads.push([...currentModules, dirEntry.name]);
       } else if (dirEntry.isFile) {
@@ -44,7 +45,7 @@ export async function createRoutesMap(basePath: string) {
         const [fileName] = segmants;
 
         const verb = fileName.slice(1, -1);
-        const filePath = routesResolver(modulePath, dirEntry.name);
+        const filePath = path.join(modulePath, dirEntry.name);
         if (isHTTPVerb(verb)) {
           const module = await fetchModule<RequestHandler>(filePath);
           route[verb].default = module.default;

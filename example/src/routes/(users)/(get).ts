@@ -1,3 +1,5 @@
-export default function getUsers(): Response {
-  return new Response("HEEY");
-}
+import { RequestHandler } from "../../../../src/types/Routes.ts";
+
+const Users: RequestHandler = () => {
+  return new Response("Getting all users");
+};
