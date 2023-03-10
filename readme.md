@@ -1,10 +1,11 @@
 This is very experimental **DO NOT** use it in production.
 
-### What is Atom
+# What is Atom
 
 Atom is a simple robust web framework built with Deno. Many features are inspired by front-end frameworks like React and Next.js such as the file-based routing and hooks.
 
-### Routing
+This is not a complete documentation because the framework is still in development. I will update this document as the framework evolves.
+# Routing
 
 ## Basics
 
