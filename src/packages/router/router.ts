@@ -30,9 +30,9 @@ export async function createRoutesMap(basePath: string) {
 
   async function readRoutes(currentModules: string[]) {
     const modulePath = routesResolver(...currentModules);
-    const httpPathModules = currentModules.filter((module) => !module.startsWith("@"));
-    const httpPath = getHttpPath(path.posix.join(...httpPathModules));
+    const httpPath = getHttpPath(path.posix.join(...currentModules));
     const route = (routesMap[httpPath] = createEmptyRoute());
+
     const pendingDirReads = [];
     for await (const dirEntry of Deno.readDir(modulePath)) {
       if (!isValidDirName(dirEntry.name.split(".")[0])) continue;
@@ -48,6 +48,7 @@ export async function createRoutesMap(basePath: string) {
         const filePath = path.join(modulePath, dirEntry.name);
         if (isHTTPVerb(verb)) {
           const module = await fetchModule<RequestHandler>(filePath);
+
           route[verb].default = module.default;
           route[verb].body = module.body;
           route[verb].middlewares = module.middlewares;

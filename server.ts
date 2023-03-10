@@ -40,6 +40,7 @@ export async function bootstrap(config: BootstrapConfig) {
   const routesRef = {
     value: await createRoutesMap(config.routesDir || "routes"),
   };
+
   watchRoutes(config.routesDir || "routes", routesRef);
   async function handler(request: Request): Promise<Response> {
     try {

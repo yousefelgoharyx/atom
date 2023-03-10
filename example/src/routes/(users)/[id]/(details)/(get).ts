@@ -1,6 +1,6 @@
 import { useParams } from "../../../../../../src/packages/hooks/useParams.ts";
 
-export default function getUsers(): Response {
+export default function GetUserDetails(): Response {
   const params = useParams();
   console.log(params.id);
 
