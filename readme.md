@@ -63,7 +63,7 @@ export default function getUsers(): Response {
 
 You can create a folder that starts with `@` to group routes together without affecting the url
 
-![Routing1](./images1/routing3.png)
+![Routing1](./images1/routing2.png)
 
 ## Middlewares
 
